@@ -37,7 +37,7 @@
         kubernetes-helm
         kyverno-chainsaw
         kcl
-        kittycad-kcl-lsp
+        # kittycad-kcl-lsp
         yq-go
         iterm2
         oh-my-zsh
@@ -59,9 +59,13 @@
           "helm"
           "python@3.13"
           "virtualenvwrapper"
+          "kcl-lang/tap/kcl-lsp"
         ];
         casks = [
           "docker"
+        ];
+        taps = [
+          "kcl-lang/tap"
         ];
         onActivation.cleanup = "zap";
         onActivation.autoUpdate = true;
