@@ -60,12 +60,14 @@
           "python@3.13"
           "virtualenvwrapper"
           "kcl-lang/tap/kcl-lsp"
+          "derailed/k9s/k9s"
         ];
         casks = [
           "docker"
         ];
         taps = [
           "kcl-lang/tap"
+          "derailed/k9s"
         ];
         onActivation.cleanup = "zap";
         onActivation.autoUpdate = true;
