@@ -58,6 +58,7 @@
             oh-my-zsh
             zsh-powerlevel10k
             vscode
+            krew
           ];
 
           fonts.packages = with pkgs; [ nerd-fonts.meslo-lg ];
@@ -160,6 +161,7 @@
                 "editor.cursorBlinking" = "phase";
                 "editor.cursorSmoothCaretAnimation" = "on";
                 "workbench.colorTheme" = "Palenight Theme";
+                "security.workspace.trust.untrustedFiles" = "open";
               };
               keybindings = [
                 # See https://code.visualstudio.com/docs/getstarted/keybindings#_advanced-customization
@@ -198,6 +200,21 @@
             '';
             initExtra = ''
               source virtualenvwrapper.sh
+              export PATH="''${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+              function avctx() {
+                local profile=$(aws-vault list | awk '{print $1}' | grep -v 'Session' | fzf)
+                if [ -n "$profile" ]; then
+                  echo "Starting aws-vault session for profile: $profile"
+                  aws-vault exec "$profile" -- "$SHELL"
+                fi
+              }
+              function aws-sso() {
+                local profile=$(aws configure list-profiles | fzf)
+                if [ -n "$profile" ]; then
+                  echo "Starting aws-sso session for profile: $profile"
+                  aws sso login --profile "$profile"
+                fi
+              }
             '';
             oh-my-zsh = {
               enable = true;
@@ -207,6 +224,7 @@
                 "virtualenv"
                 "kubectl"
                 "terraform"
+                "aws"
               ];
             };
             plugins = [
