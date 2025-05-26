@@ -201,18 +201,12 @@
             initExtra = ''
               source virtualenvwrapper.sh
               export PATH="''${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-              function avctx() {
-                local profile=$(aws-vault list | awk '{print $1}' | grep -v 'Session' | fzf)
-                if [ -n "$profile" ]; then
-                  echo "Starting aws-vault session for profile: $profile"
-                  aws-vault exec "$profile" -- "$SHELL"
-                fi
-              }
               function aws-sso() {
                 local profile=$(aws configure list-profiles | fzf)
                 if [ -n "$profile" ]; then
                   echo "Starting aws-sso session for profile: $profile"
                   aws sso login --profile "$profile"
+                  export AWS_PROFILE=$profile
                 fi
               }
             '';
