@@ -31,6 +31,8 @@
 
           nixpkgs.config.allowUnfree = true;
 
+          system.primaryUser = "renewerk";
+
           users.users.${username} = {
             home = homeDir;
           };
@@ -71,11 +73,12 @@
               "jq"
               "terraform"
               "helm"
-              "python@3.13"
+              "python@3"
               "virtualenvwrapper"
               "kcl-lang/tap/kcl-lsp"
               "derailed/k9s/k9s"
               "viddy"
+              "pipx"
             ];
             casks = [
               "docker"
@@ -142,7 +145,7 @@
           nixpkgs.hostPlatform = "aarch64-darwin";
         };
       homeConfig =
-        { pkgs, ... }:
+        { pkgs, lib, ... }:
         {
           home.username = username;
           home.homeDirectory = homeDir;
@@ -162,6 +165,8 @@
                 "editor.cursorSmoothCaretAnimation" = "on";
                 "workbench.colorTheme" = "Palenight Theme";
                 "security.workspace.trust.untrustedFiles" = "open";
+                "git.confirmSync" = false;
+                "git.enableSmartCommit" = true;
               };
               keybindings = [
                 # See https://code.visualstudio.com/docs/getstarted/keybindings#_advanced-customization
@@ -190,26 +195,25 @@
             # syntaxHighlighting.enable = true;
             autocd = true;
             autosuggestion.enable = true;
-            initExtraFirst = ''
-              # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-              # Initialization code that may require console input (password prompts, [y/n]
-              # confirmations, etc.) must go above this block; everything else may go below.
-              if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-                source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-              fi
-            '';
-            initExtra = ''
-              source virtualenvwrapper.sh
-              export PATH="''${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-              function aws-sso() {
-                local profile=$(aws configure list-profiles | fzf)
-                if [ -n "$profile" ]; then
-                  echo "Starting aws-sso session for profile: $profile"
-                  aws sso login --profile "$profile"
-                  export AWS_PROFILE=$profile
-                fi
-              }
-            '';
+            initContent =
+              let
+                zshConfigEarlyInit = lib.mkOrder 500 ''
+                  # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+                  # Initialization code that may require console input (password prompts, [y/n]
+                  # confirmations, etc.) must go above this block; everything else may go below.
+                  if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+                    source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+                  fi
+                '';
+                zshConfig = lib.mkOrder 1000 ''
+                  source virtualenvwrapper.sh
+                  export PATH="''${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+                '';
+              in
+              lib.mkMerge [
+                zshConfigEarlyInit
+                zshConfig
+              ];
             oh-my-zsh = {
               enable = true;
               plugins = [
