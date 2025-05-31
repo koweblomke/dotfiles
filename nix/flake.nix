@@ -167,6 +167,7 @@
                 "security.workspace.trust.untrustedFiles" = "open";
                 "git.confirmSync" = false;
                 "git.enableSmartCommit" = true;
+                "update.mode" = "none";
               };
               keybindings = [
                 # See https://code.visualstudio.com/docs/getstarted/keybindings#_advanced-customization
@@ -177,6 +178,7 @@
                 }
               ];
               extensions = pkgs.nix4vscode.forVscode [
+                "ms-python.debugpy"
                 "jnoortheen.nix-ide"
                 "continue.continue"
                 "pkief.material-icon-theme"
