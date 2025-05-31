@@ -56,7 +56,6 @@
             kyverno-chainsaw
             kcl
             yq-go
-            iterm2
             oh-my-zsh
             zsh-powerlevel10k
             vscode
@@ -83,6 +82,7 @@
             casks = [
               "docker"
               "ollama"
+              "iterm2"
             ];
             taps = [
               "kcl-lang/tap"
@@ -124,7 +124,7 @@
               "/Applications/Slack.app"
               "/Applications/AWS VPN Client/AWS VPN Client.app"
               "${pkgs.vscode}/Applications/Visual Studio Code.app"
-              "${pkgs.iterm2}/Applications/iTerm2.app"
+              "/Applications/iTerm.app"
             ];
           };
 
@@ -208,6 +208,7 @@
                 zshConfig = lib.mkOrder 1000 ''
                   source virtualenvwrapper.sh
                   export PATH="''${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+                  source $HOME/.local/pipx/venvs/aws-sso-config/share/_aws_sso_config
                 '';
               in
               lib.mkMerge [
