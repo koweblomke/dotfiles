@@ -210,7 +210,7 @@
                 zshConfig = lib.mkOrder 1000 ''
                   source virtualenvwrapper.sh
                   export PATH="''${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-                  source $HOME/.local/pipx/venvs/aws-sso-config/share/_aws_sso_config
+                  source $HOME/.local/pipx/venvs/aws-sso-config/share/_aw
                 '';
               in
               lib.mkMerge [
