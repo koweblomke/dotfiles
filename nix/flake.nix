@@ -188,6 +188,7 @@
                 "mohsen1.prettify-json"
                 "eamodio.gitlens"
                 "ms-vscode-remote.remote-ssh"
+                "aikebang.mkdocs-syntax-highlight"
               ];
             };
           };
