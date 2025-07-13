@@ -43,6 +43,7 @@
           # $ nix-env -qaP | grep wget
 
           environment.systemPackages = with pkgs; [
+            terraform
             nixfmt-rfc-style
             vim
             mkalias
@@ -60,6 +61,7 @@
             zsh-powerlevel10k
             vscode
             krew
+            nodejs
           ];
 
           fonts.packages = with pkgs; [ nerd-fonts.meslo-lg ];
@@ -70,7 +72,6 @@
               "aws-iam-authenticator"
               "aws-vault"
               "jq"
-              "terraform"
               "helm"
               "python@3"
               "virtualenvwrapper"
@@ -80,8 +81,8 @@
               "pipx"
             ];
             casks = [
-              "docker"
-              "ollama"
+              "docker-desktop"
+              "ollama-app"
               "iterm2"
             ];
             taps = [
@@ -168,6 +169,15 @@
                 "git.confirmSync" = false;
                 "git.enableSmartCommit" = true;
                 "update.mode" = "none";
+                "extensions.ignoreRecommendations" = true;
+                "editor.defaultFormatter" = "esbenp.prettier-vscode";
+                "[KCL]" = {
+                  "editor.defaultFormatter" = "kcl.kcl-vscode-extension";
+                };
+                "files.associations" = {
+                  "*.flow" = "python";
+                };
+                "terminal.integrated.fontFamily" = "MesloLGS NF";
               };
               keybindings = [
                 # See https://code.visualstudio.com/docs/getstarted/keybindings#_advanced-customization
@@ -178,7 +188,8 @@
                 }
               ];
               extensions = pkgs.nix4vscode.forVscode [
-                "ms-python.debugpy"
+                "mborik.z80-macroasm"
+                "HashiCorp.terraform"
                 "jnoortheen.nix-ide"
                 "continue.continue"
                 "pkief.material-icon-theme"
@@ -189,6 +200,8 @@
                 "eamodio.gitlens"
                 "ms-vscode-remote.remote-ssh"
                 "aikebang.mkdocs-syntax-highlight"
+                "kcl.kcl-vscode-extension"
+                "ms-vscode.cpptools"
               ];
             };
           };
@@ -211,7 +224,7 @@
                 zshConfig = lib.mkOrder 1000 ''
                   source virtualenvwrapper.sh
                   export PATH="''${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-                  source $HOME/.local/pipx/venvs/aws-sso-config/share/_aw
+                  source $(pipx environment | grep PIPX_LOCAL_VENVS | awk -F "=" '{print $2}')/aws-sso-config/share/_aw.zsh
                 '';
               in
               lib.mkMerge [
