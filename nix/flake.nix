@@ -55,13 +55,14 @@
             crossplane-cli
             kubernetes-helm
             kyverno-chainsaw
-            kcl
+            # kcl
             yq-go
             oh-my-zsh
             zsh-powerlevel10k
             vscode
             krew
             nodejs
+            claude-code
           ];
 
           fonts.packages = with pkgs; [ nerd-fonts.meslo-lg ];
@@ -146,7 +147,7 @@
           nixpkgs.hostPlatform = "aarch64-darwin";
         };
       homeConfig =
-        { pkgs, lib, ... }:
+        { pkgs, lib, config, ... }:
         {
           home.username = username;
           home.homeDirectory = homeDir;
@@ -191,7 +192,7 @@
                 "mborik.z80-macroasm"
                 "HashiCorp.terraform"
                 "jnoortheen.nix-ide"
-                "continue.continue"
+                # "continue.continue"
                 "pkief.material-icon-theme"
                 "whizkydee.material-palenight-theme"
                 "ms-python.python"
@@ -207,7 +208,7 @@
           };
           programs.zsh = {
             enable = true;
-            dotDir = ".config/zsh";
+            dotDir = "${config.home.homeDirectory}.config/zsh";
             # syntaxHighlighting.enable = true;
             autocd = true;
             autosuggestion.enable = true;
@@ -254,6 +255,10 @@
                 file = "powerlevel10k.zsh-theme";
               }
             ];
+          };
+          programs.vim = {
+            enable = true;
+            defaultEditor = true;
           };
           home.stateVersion = "24.11";
         };
